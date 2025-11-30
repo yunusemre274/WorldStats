@@ -1,0 +1,176 @@
+Design a futuristic, high-contrast, fully interactive web UI for a data-driven world statistics platform.
+
+🎨 GENERAL THEME
+
+Build the entire interface in a dark futuristic cyber-theme, using:
+
+Deep Black background (#000000)
+
+Neon Purple (#9d4edd) accents
+
+Electric Pink (#ff1b6b) highlights
+
+Strong glowing borders, gradients, animated neon edges
+
+Smooth micro-interactions and hover animations
+
+Soft blur glassmorphism panels
+
+Dynamic sliding / scrolling neon typography
+
+🗺️ LANDING PAGE (Main Screen)
+
+When the website loads, display a full-screen interactive world map (like amCharts / Leaflet / D3 style).
+
+Requirements:
+
+Map is centered with glowing borders
+
+Countries glow neon purple on hover
+
+Selected country pulses neon pink
+
+A floating label appears on hover showing the country's name
+
+Clicking a country opens the “Statistics Panel”
+
+Also include in the background:
+
+Slow-moving neon particles
+
+Horizontal neon light streaks
+
+Animated cyber grid pattern with slight transparency
+
+Add a large header text:
+“WORLD DATA MATRIX”, animated with:
+
+letter-spacing animation
+
+neon glow
+
+sliding reveal
+
+📊 STATISTICS PANEL UI (Opens After Country Selection)
+
+Create a right-side expandable panel with glassmorphism style:
+
+Background: transparent black + blur
+
+Neon purple border glow
+
+Smooth slide-in animation
+
+Organize the statistics into categories with collapsible sections:
+
+▶ 1. Demographics
+
+Average IQ score
+
+Male–Female ratio
+
+Child population percentage
+
+Literacy rate
+
+Addiction rates (smoking, alcohol, substances)
+
+Population charts (Pie, Line, Bar)
+
+Charts should use neon purple & neon pink glow themes.
+
+▶ 2. Military Data
+
+Global military strength ranking
+
+Active personnel count
+
+Military budget (optional)
+
+Pie chart: categories of military assets
+
+Animated number counters
+
+▶ 3. Crime Statistics
+
+Overall crime index
+
+PieChart showing crime categories
+
+Trend line showing crime rate over years
+
+▶ 4. Economic & Political Indicators
+
+GDP per capita
+
+Government type
+
+EU/NATO membership badges
+
+Passport ranking indicator
+
+Neon badge icons with glow
+
+🧭 TOP NAVIGATION BAR
+
+Create a minimal futuristic top bar with:
+
+Left: Logo “DATA-ORB” with neon morphing animation
+
+Center: Sliding/scrolling neon purple text (cyber-ticker moving left to right)
+
+Right: Settings button (gear icon, neon pink glow)
+
+Hover effects:
+
+Scale + glow bloom
+
+🔘 INTERACTIVE BUTTONS
+
+Buttons must be highly animated:
+
+Neon purple to neon pink gradient
+
+Glow pulse
+
+Soft hover expansion
+
+Ripple wave on click
+
+🌀 ADDITIONAL UI ELEMENTS
+
+Neon-outlined cards for each stat category
+
+Animated progress bars in neon colors
+
+Gradient glowing separators
+
+Futuristic icons (thin, line-based, neon-outlined)
+
+🌐 FONT / TEXT STYLE
+
+Use a futuristic display font such as Orbitron, Exo, or similar.
+Body font: Inter or IBM Plex Sans.
+Titles use neon glow shadows + animated underline.
+
+📱 RESPONSIVE REQUIREMENTS
+
+Map becomes draggable full screen on mobile
+
+Stats panel becomes bottom-sheet style on small screens
+
+Charts become swipeable
+
+🧩 DELIVERABLE
+
+Generate:
+
+Full HTML + CSS + JS front-end
+
+Interactive map component
+
+All containers, panels and animations
+
+Placeholder data + mock charts
+
+Optimized neon cyber-theme styling
