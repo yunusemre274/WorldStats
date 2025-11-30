@@ -1,19 +1,19 @@
 {
   "name": "worldstats-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Production-ready backend for WorldStats - Real-time global statistics API",
   "main": "dist/index.js",
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && npm run copy-prisma",
+    "copy-prisma": "node -e \"require('fs').cpSync('prisma', 'dist/prisma', {recursive: true})\"",
     "start": "node dist/index.js",
+    "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts && tsx prisma/seed-more.ts",
     "db:studio": "prisma studio",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
@@ -32,6 +32,8 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "openai": "^4.24.0",
+    "prisma": "^5.7.0",
+    "tsx": "^4.7.0",
     "uuid": "^9.0.1",
     "ws": "^8.14.2",
     "zod": "^3.22.4"
@@ -45,8 +47,6 @@
     "@types/node-cron": "^3.0.11",
     "@types/uuid": "^9.0.7",
     "@types/ws": "^8.5.10",
-    "prisma": "^5.7.0",
-    "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   },
   "engines": {
