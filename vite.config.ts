@@ -13,6 +13,10 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      // Fallback alias: some builds try to resolve `tw-animate-css` directly
+      // Map it to a local stub so Vercel/Vite doesn't fail when the package
+      // cannot be resolved in certain build environments.
+      "tw-animate-css": path.resolve(import.meta.dirname, "client", "src", "stubs", "tw-animate-css.css"),
     },
   },
   css: {

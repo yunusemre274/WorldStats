@@ -1,0 +1,20 @@
+/* Stub for tw-animate-css to satisfy Vite resolution during builds.
+   The real plugin (tailwindcss-animate) supplies utilities; this stub
+   keeps build from failing if `tw-animate-css` cannot be resolved in some
+   environments (Vercel caching or monorepo package layout). */
+
+/* Minimal safe defaults: define a few animation utility classes used in the app */
+@layer utilities {
+  .animate-fade-in { animation: fadeIn 0.6s ease both; }
+  .animate-pop { animation: pop 0.5s cubic-bezier(.2,.9,.3,1) both; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  from { transform: scale(.98); opacity: .9; }
+  to { transform: scale(1); opacity: 1; }
+}
