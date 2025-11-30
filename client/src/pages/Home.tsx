@@ -13,9 +13,6 @@ export default function Home() {
   // Convert numeric ID to alpha-2 code for API
   const alpha2Code = selectedCountryCode ? ISO_NUMERIC_TO_ALPHA2[selectedCountryCode] || null : null;
   
-  // Debug logging
-  console.log("Selected numeric ID:", selectedCountryCode, "-> Alpha-2:", alpha2Code);
-  
   // Fetch country data from backend API
   const { data: countryStats, isLoading } = useCountry(alpha2Code);
 

@@ -242,7 +242,6 @@ export function useCountry(code: string | null) {
           throw new Error("Failed to fetch country");
         }
         const apiResponse: ApiResponse<BackendCountryResponse> = await response.json();
-        console.log("API Response for", code, ":", apiResponse); // Debug log
         
         if (!apiResponse.success || !apiResponse.data) {
           return null;
