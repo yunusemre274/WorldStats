@@ -23,6 +23,9 @@ async function bootstrap(): Promise<void> {
   const app = express();
   const server = createServer(app);
 
+  // Trust proxy - required for Render/Vercel/Heroku (fixes rate limiter X-Forwarded-For warning)
+  app.set('trust proxy', 1);
+
   // Security middleware
   app.use(helmet({
     contentSecurityPolicy: false, // Disable for API
@@ -36,18 +39,35 @@ async function bootstrap(): Promise<void> {
     'http://localhost:3000',
     process.env.FRONTEND_URL,
     ...(Array.isArray(config.cors.origin) ? config.cors.origin : [config.cors.origin])
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
   
   app.use(cors({
     origin: function(origin, callback) {
       // Allow requests with no origin (like mobile apps or curl)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
         callback(null, true);
-      } else if (config.env === 'development') {
-        callback(null, true); // Allow all in development
-      } else {
-        callback(new Error('Not allowed by CORS'));
+        return;
       }
+      
+      // Check explicit allowlist
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      
+      // Allow Vercel preview deployments and production
+      if (origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com')) {
+        callback(null, true);
+        return;
+      }
+      
+      // Allow all in development
+      if (config.env === 'development') {
+        callback(null, true);
+        return;
+      }
+      
+      callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
