@@ -29,15 +29,24 @@ async function bootstrap(): Promise<void> {
     crossOriginEmbedderPolicy: false,
   }));
 
-  // CORS - allow multiple origins
+  // CORS - allow multiple origins including production
+  const allowedOrigins = [
+    'http://localhost:5000', 
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    process.env.FRONTEND_URL,
+    ...(Array.isArray(config.cors.origin) ? config.cors.origin : [config.cors.origin])
+  ].filter(Boolean);
+  
   app.use(cors({
     origin: function(origin, callback) {
-      const allowedOrigins = ['http://localhost:5000', 'http://localhost:5173', 'http://localhost:3000'];
       // Allow requests with no origin (like mobile apps or curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
+      } else if (config.env === 'development') {
+        callback(null, true); // Allow all in development
       } else {
-        callback(null, true); // Allow all for development
+        callback(new Error('Not allowed by CORS'));
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
