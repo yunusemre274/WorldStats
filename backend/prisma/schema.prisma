@@ -1,0 +1,310 @@
+// Prisma Schema for WorldStats Backend
+// Using SQLite for easy local development (no PostgreSQL required)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Main Country table
+model Country {
+  id            String   @id @default(uuid())
+  code          String   @unique // ISO 3166-1 alpha-2 code (e.g., "US", "DE")
+  code3         String?  // ISO 3166-1 alpha-3 code (e.g., "USA", "DEU")
+  name          String
+  officialName  String?
+  region        String?
+  subregion     String?
+  capital       String?
+  population    BigInt?
+  area          Float?   // in km²
+  flagUrl       String?
+  mapUrl        String?
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  demographics  Demographics?
+  economy       Economy?
+  military      Military?
+  politics      Politics?
+  crime         Crime?
+  healthStats   HealthStats?
+  education     Education?
+  aiSummaries   AISummary[]
+
+  @@index([name])
+  @@index([region])
+}
+
+// Demographics data
+model Demographics {
+  id                        String   @id @default(uuid())
+  countryId                 String   @unique
+  country                   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  totalPopulation           BigInt?
+  malePopulation            BigInt?
+  femalePopulation          BigInt?
+  maleFemaleRatio           String?  // e.g., "49% / 51%"
+  populationGrowthRate      Float?   // percentage
+  medianAge                 Float?
+  lifeExpectancy            Float?
+  lifeExpectancyMale        Float?
+  lifeExpectancyFemale      Float?
+  birthRate                 Float?   // per 1000
+  deathRate                 Float?   // per 1000
+  fertilityRate             Float?
+  infantMortalityRate       Float?   // per 1000 live births
+  urbanPopulationPercent    Float?
+  childPopulationPercent    Float?   // 0-14 years
+  workingAgePercent         Float?   // 15-64 years
+  elderlyPercent            Float?   // 65+ years
+  averageIQ                 Float?
+  
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+// Economic data
+model Economy {
+  id                    String   @id @default(uuid())
+  countryId             String   @unique
+  country               Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  gdp                   Float?   // in USD
+  gdpPerCapita          Float?   // in USD
+  gdpGrowthRate         Float?   // percentage
+  gdpPpp                Float?   // Purchasing Power Parity
+  gdpGrowthHistory      String?  // JSON string for line charts
+  inflation             Float?   // percentage
+  unemploymentRate      Float?   // percentage
+  povertyRate           Float?   // percentage
+  giniIndex             Float?   // inequality measure
+  publicDebt            Float?   // percentage of GDP
+  externalDebt          Float?   // in USD
+  tradeBalance          Float?   // in USD
+  exports               Float?   // in USD
+  imports               Float?   // in USD
+  foreignReserves       Float?   // in USD
+  minimumWage           Float?   // in USD per month
+  averageIncome         Float?   // in USD per year
+  currency              String?
+  currencyCode          String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// Military data
+model Military {
+  id                    String   @id @default(uuid())
+  countryId             String   @unique
+  country               Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  globalRank            Int?
+  totalMilitaryPersonnel Int?
+  activeSoldiers        Int?
+  reservePersonnel      Int?
+  paramilitaryForces    Int?
+  defenseSpending       Float?   // in USD
+  defenseSpendingPercent Float?  // percentage of GDP
+  tanks                 Int?
+  armoredVehicles       Int?
+  selfPropelledArtillery Int?
+  towedArtillery        Int?
+  rocketProjectors      Int?
+  totalAircraft         Int?
+  fighters              Int?
+  helicopters           Int?
+  attackHelicopters     Int?
+  navalVessels          Int?
+  aircraftCarriers      Int?
+  submarines            Int?
+  destroyers            Int?
+  frigates              Int?
+  nuclearWeapons        Boolean  @default(false)
+  isNatoMember          Boolean  @default(false)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// Political data
+model Politics {
+  id                    String   @id @default(uuid())
+  countryId             String   @unique
+  country               Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  governmentType        String?
+  chiefOfState          String?
+  headOfGovernment      String?
+  politicalSystem       String?
+  legislativeBranch     String?
+  judicialBranch        String?
+  constitution          String?
+  suffrage              String?
+  independenceDate      DateTime?
+  nationalHoliday       String?
+  isEU                  Boolean  @default(false)
+  isUN                  Boolean  @default(true)
+  isNato                Boolean  @default(false)
+  isG7                  Boolean  @default(false)
+  isG20                 Boolean  @default(false)
+  isBrics               Boolean  @default(false)
+  passportRanking       Int?
+  passportVisaFree      Int?     // number of visa-free destinations
+  democracyIndex        Float?
+  corruptionIndex       Float?   // Transparency International CPI
+  presssFreedomIndex    Float?
+  humanDevelopmentIndex Float?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// Crime statistics
+model Crime {
+  id                    String          @id @default(uuid())
+  countryId             String          @unique
+  country               Country         @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  crimeIndex            Float?          // Numbeo crime index
+  safetyIndex           Float?          // Numbeo safety index
+  totalCrimeRate        Float?          // per 100,000
+  homicideRate          Float?          // per 100,000
+  assaultRate           Float?
+  robberyRate           Float?
+  burglaryRate          Float?
+  vehicleTheftRate      Float?
+  kidnappingRate        Float?
+  humanTraffickingRisk  String?         // Low, Medium, High
+  drugTraffickingRisk   String?
+  terrorismRisk         String?
+  
+  categories            CrimeCategory[]
+  
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
+
+// Crime category breakdown
+model CrimeCategory {
+  id          String  @id @default(uuid())
+  crimeId     String
+  crime       Crime   @relation(fields: [crimeId], references: [id], onDelete: Cascade)
+  
+  category    String  // e.g., "Theft", "Violent Crime", "Fraud", "Cyber Crime"
+  percentage  Float
+  count       Int?
+  
+  @@unique([crimeId, category])
+}
+
+// Health statistics (including addictions)
+model HealthStats {
+  id                        String   @id @default(uuid())
+  countryId                 String   @unique
+  country                   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  healthcareSpendingPercent Float?   // percentage of GDP
+  healthcareSpendingPerCapita Float?
+  hospitalBedsPer1000       Float?
+  physiciansPer1000         Float?
+  nursesPer1000             Float?
+  obesityRate               Float?   // percentage of adult population
+  smokingRate               Float?   // percentage of adult population
+  alcoholConsumption        Float?   // liters per capita per year
+  alcoholDependencyRate     Float?   // percentage
+  drugUseRate               Float?   // percentage
+  cannabisUseRate           Float?
+  opioidUseRate             Float?
+  cocaineUseRate            Float?
+  hivPrevalence             Float?   // percentage of population
+  tuberculosisIncidence     Float?   // per 100,000
+  malariaIncidence          Float?   // per 1,000 at risk
+  diabetesPrevalence        Float?   // percentage
+  mentalHealthDisorders     Float?   // percentage
+  suicideRate               Float?   // per 100,000
+  
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+// Education statistics
+model Education {
+  id                        String   @id @default(uuid())
+  countryId                 String   @unique
+  country                   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  literacyRate              Float?   // percentage
+  literacyRateMale          Float?
+  literacyRateFemale        Float?
+  educationSpendingPercent  Float?   // percentage of GDP
+  primaryEnrollmentRate     Float?   // percentage
+  secondaryEnrollmentRate   Float?
+  tertiaryEnrollmentRate    Float?
+  averageSchoolingYears     Float?
+  studentTeacherRatio       Float?
+  piloStudentsReading       Int?     // PISA score
+  piloStudentsMath          Int?
+  piloStudentsScience       Int?
+  universitiesInTop500      Int?
+  
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+// AI-generated summaries cache
+model AISummary {
+  id          String   @id @default(uuid())
+  countryId   String
+  country     Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  
+  summary     String
+  model       String?  // e.g., "gpt-4"
+  tokensUsed  Int?
+  
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([countryId, createdAt])
+}
+
+// External data cache
+model ExternalDataCache {
+  id          String   @id @default(uuid())
+  provider    String   // e.g., "worldbank", "un", "oecd"
+  endpoint    String   // specific API endpoint
+  data        String   // JSON string cached response
+  
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@unique([provider, endpoint])
+  @@index([provider])
+  @@index([expiresAt])
+}
+
+// Sync job logs
+model SyncLog {
+  id            String    @id @default(uuid())
+  provider      String
+  status        String    // "started", "success", "failed", "partial"
+  recordsCount  Int?
+  errorMessage  String?
+  duration      Int?      // in milliseconds
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  metadata      String?   // JSON string
+
+  @@index([provider])
+  @@index([status])
+  @@index([startedAt])
+}
